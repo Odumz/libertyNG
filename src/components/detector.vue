@@ -93,7 +93,7 @@ const startStreaming: void = () => {
       (video.value as HTMLVideoElement).srcObject = stream;
       setInterval(() => {
         detectObjects();
-      }, 1d000);
+      }, 1000);
     });
 };
 
