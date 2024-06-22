@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import card from "./components/card.vue";
 import detector from "./components/detector.vue";
 
@@ -112,7 +113,39 @@ const icons: {}[] = [
   },
 ];
 
+console.log('Initially ' + (window.navigator.onLine ? 'on' : 'off') + 'line');
 
+window.addEventListener('online', () => hasError[1] = false);
+window.addEventListener('offline', () => hasError[1] = true);
+
+const connectOk:any = (index:number) => {
+  console.log('arrived here with ' + index)
+  hasError[index] = false;
+  isOk[index] = true;
+  console.log('arrived out now with ', hasError[index], isOk[index])
+}
+
+const connectNotOk:any = (index:number) => {
+  hasError[index] = true
+  isOk[index] = false
+}
+
+const internetCheck:any = computed(() => {
+  return window.navigator.onLine ? connectOk(1) : connectNotOk(1)
+})
+
+const cameraCheck:any = (res:boolean) => {
+  console.log('I got camera', res)
+  res == true ? connectOk(0) : connectNotOk(0);
+}
+
+const audioCheck:any = (res:boolean) => {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(connectOk(2))
+  console.log('I got audio too', res)
+  // res == true ? connectOk(2) : connectNotOk(2);
+}
+
+// document.getElementById('internetCheck').addEventListener('click', () => console.log('window.navigator.onLine is ' + window.navigator.onLine));
 </script>
 
 <template>
@@ -197,7 +230,7 @@ const icons: {}[] = [
       </div>
     </nav>
     <main>
-      <h1>System check</h1>
+      <h1>System check {{ internetCheck }} {{ cameraCheck() }} {{ audioCheck() }}</h1>
       <p class="text">
         We utilize your camera image to ensure fairness for all participants,
         and we also employ both your camera and microphone for a video questions
@@ -212,7 +245,7 @@ const icons: {}[] = [
       <div
         class="screen flex gap-x-[2.125rem] items-center w-[37.5625rem] mt-[1.875rem]"
       >
-        <detector />
+        <detector @popCamera="cameraCheck" @popAudio="audioCheck" />
         <div class="screen-icons grid grid-cols-2 gap-x-4 gap-y-3 w-[22.375rem]">
           <div
             v-for="(icon, index) in icons"

@@ -23,18 +23,61 @@ import { onMounted, ref } from "vue";
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
+// import Swal from 'vue-sweetalert2';
+import Swal from 'sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+const emits = defineEmits(['popCamera', 'popAudio'])
 
 const video = ref<HTMLVideoElement>();
 const devices = ref<MediaDeviceInfo[]>([]);
+const audioDevices = ref<MediaDeviceInfo[]>([]);
 const camera = ref<string>("");
+const audio = ref<string>("");
 const drawingBoard = ref<HTMLCanvasElement>();
 
 onMounted(async () => {
   if ("mediaDevices" in navigator && "getUserMedia" in navigator.mediaDevices) {
     devices.value = await navigator.mediaDevices.enumerateDevices();
+    audioDevices.value = await navigator.mediaDevices.enumerateDevices();
     console.log("device nah ", devices.value);
     devices.value = devices.value.filter((item) => item.kind == "videoinput");
+    audioDevices.value = audioDevices.value.filter((item) => item.kind == "audioinput");
+    console.log("audio device nah ", audioDevices.value);
     camera.value = devices.value[0].deviceId;
+    audio.value = audioDevices.value[0].deviceId;
+    if (!camera.value) {
+      console.log('the camera is bad', camera.value);
+
+      Swal.fire({
+        title: 'Error!',
+        text: 'Check your camera permissions and try again.',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      emits('popCamera', false)
+      return
+    } else {
+      emits('popCamera', true)
+    }
+    if (!audio.value) {
+      console.log('the audio is bad', audio.value);
+
+      Swal.fire({
+        title: 'Error!',
+        text: 'Check your audio permissions and try again.',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      emits('popAudio', false)
+      return
+    } else {
+      emits('popAudio', true)
+    }
+    console.log('the camera is ', camera.value);
+    console.log('the audio is ', audio.value);
+    // emits('popCamera', true)
+    // emits('popAudio', true)
     startStreaming();
   }
 });
@@ -50,7 +93,7 @@ const startStreaming: void = () => {
       (video.value as HTMLVideoElement).srcObject = stream;
       setInterval(() => {
         detectObjects();
-      }, 1000);
+      }, 1d000);
     });
 };
 
