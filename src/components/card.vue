@@ -2,12 +2,13 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "Cards",
+  name: "Card",
 });
 </script>
 
 <script setup lang="ts">
 import { toRefs, ref, Ref } from "vue";
+import svgIcon from "./svgIcon.vue";
 
 const props = defineProps<{
   iconName: String;
@@ -18,32 +19,10 @@ const props = defineProps<{
 
 const { iconName, details } = toRefs(props);
 
-import svgIcon from "./svgIcon.vue";
-// const hasError: Ref<boolean> = ref(true);
-// const isOk: Ref<boolean> = ref(false);
-
-const copy: any = async (link: string) => {
-  console.log("copying");
-  // console.log(`the alert state is ${alertState.value} `)
-  console.log("copying");
-  // alertState.value = !alertState.value;
-  // console.log(`the alert state is ${alertState.value} `)
-  try {
-    await navigator.clipboard.writeText(link);
-    console.log("Copied to d clipboard", link);
-    isCopied.value = true;
-  } catch (e) {
-    console.error(e);
-  }
-  setTimeout(() => {
-    isCopied.value = false;
-  }, 1700);
-};
 </script>
 
 <template>
   <div class="box">
-    <!-- {{ details }} -->
     <div
       class="animate-flyIn rounded-full"
       :class="[
@@ -87,11 +66,5 @@ const copy: any = async (link: string) => {
 
 .box-icon__mini {
   @apply absolute top-[.125rem] right-[.1875rem] text-white w-4 h-4 grid place-content-center p-[3px] rounded-full;
-}
-
-.dropdown:focus-within .dropdown-menu {
-  opacity: 1;
-  transform: translate(0) scale(1);
-  visibility: visible;
 }
 </style>

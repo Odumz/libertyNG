@@ -112,7 +112,7 @@ const icons: {}[] = [
   },
 ];
 
-console.log(icons[0]?.default);
+
 </script>
 
 <template>
@@ -210,13 +210,10 @@ console.log(icons[0]?.default);
         recording of yourself by clicking the button below.
       </p>
       <div
-        class="screen flex gap-x-[2.125rem] items-center w-[31.5625rem] mt-[1.875rem]"
+        class="screen flex gap-x-[2.125rem] items-center w-[37.5625rem] mt-[1.875rem]"
       >
-        <!-- <div class="screen-camera w-[16.5rem] h-[10.5rem] rounded-[.625rem] overflow-hidden border"> -->
-        <!-- <div class="screen-camera rounded-[.625rem] border"> -->
-        <detector class="rounded-[.625rem]" />
-        <!-- </div> -->
-        <div class="screen-icons grid grid-cols-2 gap-x-4 gap-y-3 w-[12.375rem]">
+        <detector />
+        <div class="screen-icons grid grid-cols-2 gap-x-4 gap-y-3 w-[22.375rem]">
           <div
             v-for="(icon, index) in icons"
             :key="index"
